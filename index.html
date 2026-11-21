@@ -1,0 +1,1294 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AegeanLabs — Engineering the Future of Risk Management</title>
+  <!-- Google Fonts: Inter & JetBrains Mono for institutional financial precision -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+          colors: {
+            aegean: {
+              navy: '#040914',
+              slate: '#0A1224',
+              card: '#0E182E',
+              border: '#1B2B4B',
+              royal: '#0A369D',
+              blue: '#1D63DC',
+              cyan: '#00B4D8',
+              glow: '#38BDF8',
+            }
+          },
+          animation: {
+            'marquee': 'marquee 38s linear infinite',
+            'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+          },
+          keyframes: {
+            marquee: {
+              '0%': { transform: 'translateX(0%)' },
+              '100%': { transform: 'translateX(-50%)' },
+            }
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    body {
+      background-color: #040914;
+      color: #F8FAFC;
+      overflow-x: hidden;
+    }
+    /* Custom scrollbar for terminal tables */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #070E1D;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #1B2B4B;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #00B4D8;
+    }
+    .grid-bg {
+      background-image: 
+        linear-gradient(to right, rgba(29, 99, 220, 0.06) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(29, 99, 220, 0.06) 1px, transparent 1px);
+      background-size: 40px 40px;
+    }
+    .brand-gradient-text {
+      background: linear-gradient(135deg, #38BDF8 0%, #00B4D8 45%, #3B82F6 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .brand-gradient-bg {
+      background: linear-gradient(135deg, #0A369D 0%, #00B4D8 100%);
+    }
+    .brand-gradient-bg:hover {
+      background: linear-gradient(135deg, #1246BD 0%, #00C8F0 100%);
+    }
+    .tick-up {
+      color: #10B981;
+      transition: background-color 0.25s ease;
+    }
+    .tick-down {
+      color: #F43F5E;
+      transition: background-color 0.25s ease;
+    }
+    .flash-up {
+      background-color: rgba(16, 185, 129, 0.16);
+    }
+    .flash-down {
+      background-color: rgba(244, 63, 94, 0.16);
+    }
+  </style>
+</head>
+<body class="font-sans antialiased selection:bg-aegean-cyan/30 selection:text-white">
+
+  <!-- Top Live Market Ticker Strip (Inspired by API Sample.jpeg bottom wire) -->
+  <div class="bg-[#02060E] border-b border-aegean-border/80 text-xs font-mono py-1.5 px-3 flex items-center justify-between gap-4">
+    <div class="flex items-center gap-2 shrink-0">
+      <span class="inline-flex h-2 w-2 rounded-full bg-emerald-400 animate-ping"></span>
+      <span class="text-emerald-400 font-semibold tracking-wider uppercase text-[11px]">LIVE STREAM</span>
+      <span class="hidden sm:inline text-slate-500">|</span>
+      <span class="hidden sm:inline text-slate-400 text-[11px]">demo.ekaatechnologies.com</span>
+    </div>
+    <div class="overflow-hidden relative flex-1">
+      <div id="top-ticker-track" class="flex items-center gap-6 whitespace-nowrap animate-marquee text-[11px]">
+        <!-- Populated dynamically via JS -->
+      </div>
+    </div>
+    <button onclick="openModal('api-modal')" class="shrink-0 text-[11px] px-2.5 py-0.5 rounded-full bg-aegean-slate border border-aegean-border hover:border-aegean-cyan text-aegean-glow transition flex items-center gap-1.5">
+      <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+      <span>API: 1235</span>
+    </button>
+  </div>
+
+  <!-- 1. Top Navigation Bar -->
+  <header class="sticky top-0 z-40 backdrop-blur-xl bg-aegean-navy/85 border-b border-aegean-border/70">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-18 py-3.5 flex items-center justify-between">
+      <!-- Custom SVG AEGEANLABS Geometric A-Ribbon Logo -->
+      <a href="#" class="flex items-center gap-3 group focus:outline-none">
+        <svg class="w-9 h-9 shrink-0 transition-transform duration-300 group-hover:scale-105" viewBox="0 0 64 56" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="AegeanLabs Logo">
+          <defs>
+            <linearGradient id="aegeanRibbonMain" x1="6" y1="50" x2="44" y2="8" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#00C6E0"/>
+              <stop offset="50%" stop-color="#0A58CA"/>
+              <stop offset="100%" stop-color="#06227A"/>
+            </linearGradient>
+            <linearGradient id="aegeanRibbonSub" x1="28" y1="30" x2="56" y2="52" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#00D2EB"/>
+              <stop offset="100%" stop-color="#083094"/>
+            </linearGradient>
+          </defs>
+          <!-- Outer left-to-apex ribbon -->
+          <path d="M4 50L25.5 11.5C27.8 7.4 33.6 7.3 36.1 11.3L45.5 26.8C36.8 25.2 28.4 29.5 24.1 37.3L17.1 50H4Z" fill="url(#aegeanRibbonMain)"/>
+          <!-- Inner right leg ribbon -->
+          <path d="M29.2 35.8C32.5 31.2 38.6 29.8 43.6 32.6L54.2 50H41.2L33.5 37.2C32.4 35.6 30.6 35.2 29.2 35.8Z" fill="url(#aegeanRibbonSub)"/>
+        </svg>
+        <div class="flex items-baseline tracking-wider text-lg sm:text-xl">
+          <span class="font-extrabold text-white">AEGEAN</span><span class="font-light text-slate-200">LABS</span>
+        </div>
+      </a>
+
+      <!-- Desktop Navigation Links -->
+      <nav class="hidden lg:flex items-center gap-8 text-sm font-medium text-slate-300">
+        <a href="#broker-stages" class="hover:text-aegean-glow transition">Broker Stages</a>
+        <a href="#products" class="hover:text-aegean-glow transition">Products</a>
+        <a href="#trade-journey" class="hover:text-aegean-glow transition">Trade Journey</a>
+        <a href="#why-aegeanlabs" class="hover:text-aegean-glow transition">Why AegeanLabs</a>
+        <a href="#live-terminal" class="hover:text-aegean-glow transition flex items-center gap-1.5">
+          <span class="w-1.5 h-1.5 rounded-full bg-aegean-cyan"></span>
+          Live Feed
+        </a>
+      </nav>
+
+      <!-- Action Buttons -->
+      <div class="flex items-center gap-3">
+        <button onclick="openFitFinder()" class="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-semibold text-aegean-glow bg-aegean-slate/90 border border-aegean-border hover:border-aegean-cyan/70 transition">
+          <span>Find Your Fit</span>
+        </button>
+        <button onclick="openModal('schedule-modal')" class="px-4 py-2.5 rounded-lg text-xs sm:text-sm font-semibold text-white brand-gradient-bg shadow-lg shadow-aegean-royal/30 transition cursor-pointer">
+          Schedule a Call
+        </button>
+        <!-- Mobile Menu Toggle -->
+        <button id="mobile-menu-btn" onclick="toggleMobileMenu()" class="lg:hidden p-2 rounded-lg text-slate-300 hover:text-white hover:bg-aegean-slate border border-aegean-border" aria-label="Toggle Menu">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Dropdown Navigation -->
+    <div id="mobile-menu" class="hidden lg:hidden bg-aegean-slate border-b border-aegean-border px-4 pt-2 pb-4 space-y-2 text-sm">
+      <a href="#broker-stages" onclick="toggleMobileMenu()" class="block py-2 px-3 rounded-lg text-slate-200 hover:bg-aegean-card">Broker Stages</a>
+      <a href="#products" onclick="toggleMobileMenu()" class="block py-2 px-3 rounded-lg text-slate-200 hover:bg-aegean-card">Products</a>
+      <a href="#trade-journey" onclick="toggleMobileMenu()" class="block py-2 px-3 rounded-lg text-slate-200 hover:bg-aegean-card">Trade Journey</a>
+      <a href="#why-aegeanlabs" onclick="toggleMobileMenu()" class="block py-2 px-3 rounded-lg text-slate-200 hover:bg-aegean-card">Why AegeanLabs</a>
+      <a href="#live-terminal" onclick="toggleMobileMenu()" class="block py-2 px-3 rounded-lg text-aegean-glow hover:bg-aegean-card">Live Feed & API</a>
+      <button onclick="toggleMobileMenu(); openFitFinder();" class="w-full text-left py-2 px-3 rounded-lg text-aegean-cyan font-semibold bg-aegean-navy/60">3-Question Fit Finder →</button>
+    </div>
+  </header>
+
+  <!-- 2. Hero Section + Integrated Live Market & Streaming Terminal Screen -->
+  <section class="relative grid-bg pt-10 pb-16 lg:pt-16 lg:pb-24 border-b border-aegean-border/60 overflow-hidden">
+    <!-- Subtle ambient radial glow -->
+    <div class="pointer-events-none absolute -top-24 left-1/4 w-[520px] h-[520px] rounded-full bg-aegean-royal/20 blur-[130px]"></div>
+    <div class="pointer-events-none absolute top-32 right-0 w-[420px] h-[420px] rounded-full bg-aegean-cyan/10 blur-[120px]"></div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-8 items-center">
+        
+        <!-- Left Column: Hero Messaging -->
+        <div class="lg:col-span-6 space-y-6">
+          <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-aegean-slate/90 border border-aegean-border text-xs font-medium text-aegean-glow">
+            <span class="w-2 h-2 rounded-full bg-aegean-cyan"></span>
+            <span>Institutional Risk, Connectivity & Real-Time BI</span>
+          </div>
+
+          <h1 class="text-4xl sm:text-5xl lg:text-[3.35rem] font-extrabold tracking-tight text-white leading-[1.12]">
+            Engineering the Future of <span class="brand-gradient-text">Risk Management</span>
+          </h1>
+
+          <p class="text-base sm:text-lg text-slate-300 leading-relaxed max-w-xl">
+            Risk, connectivity, and visibility — built for multi-asset brokers and financial institutions worldwide.
+          </p>
+
+          <!-- Primary CTAs -->
+          <div class="flex flex-wrap items-center gap-3.5 pt-1">
+            <a href="#products" class="px-6 py-3.5 rounded-xl text-sm font-semibold text-white brand-gradient-bg shadow-lg shadow-aegean-royal/30 transition flex items-center gap-2">
+              <span>Explore Products</span>
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+            </a>
+            <button onclick="openModal('schedule-modal')" class="px-6 py-3.5 rounded-xl text-sm font-semibold text-slate-100 bg-aegean-slate hover:bg-aegean-card border border-aegean-border hover:border-aegean-cyan/60 transition cursor-pointer">
+              Contact Us
+            </button>
+          </div>
+
+          <!-- Micro-CTA Card beneath buttons -->
+          <div class="mt-6 p-4 sm:p-5 rounded-2xl bg-aegean-slate/85 border border-aegean-border/90 backdrop-blur-md flex flex-col sm:flex-row sm:items-center justify-between gap-4 max-w-xl">
+            <div>
+              <p class="text-xs font-semibold uppercase tracking-wider text-aegean-cyan mb-1">
+                Not sure where to start? Three questions, 60 seconds.
+              </p>
+              <p class="text-sm text-slate-300">
+                Talk to an ex-dealer, not a salesperson.
+              </p>
+            </div>
+            <div class="flex items-center gap-2 shrink-0">
+              <button onclick="openFitFinder()" class="px-3.5 py-2 rounded-lg text-xs font-semibold text-slate-200 bg-aegean-navy border border-aegean-border hover:border-aegean-cyan transition cursor-pointer">
+                3-Q Quiz
+              </button>
+              <button onclick="openModal('schedule-modal')" class="px-4 py-2 rounded-lg text-xs font-semibold text-white bg-aegean-blue hover:bg-aegean-cyan hover:text-aegean-navy transition cursor-pointer">
+                Schedule a Call
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Column: Live Streaming Trading Terminal Panel (Modeled after API Sample.jpeg & demo.ekaatechnologies.com) -->
+        <div id="live-terminal" class="lg:col-span-6">
+          <div class="rounded-2xl bg-[#070E1E] border border-aegean-border shadow-2xl shadow-black/70 overflow-hidden">
+            
+            <!-- Terminal Window Header -->
+            <div class="bg-[#0B152B] px-4 py-2.5 border-b border-aegean-border flex flex-wrap items-center justify-between gap-2">
+              <div class="flex items-center gap-2.5">
+                <div class="flex items-center gap-1.5">
+                  <span class="w-2.5 h-2.5 rounded-full bg-rose-500/80"></span>
+                  <span class="w-2.5 h-2.5 rounded-full bg-amber-400/80"></span>
+                  <span class="w-2.5 h-2.5 rounded-full bg-emerald-400/80"></span>
+                </div>
+                <span class="text-xs font-mono font-semibold text-slate-200 tracking-tight">AEGEAN-ECHO // LIVE FEED</span>
+                <span id="stream-badge" class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-mono font-semibold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
+                  <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                  CONNECTED
+                </span>
+              </div>
+
+              <div class="flex items-center gap-2">
+                <span class="text-[11px] font-mono text-aegean-glow bg-aegean-navy px-2 py-0.5 rounded border border-aegean-border">
+                  P&L Latency: <strong id="latency-readout">3.4 ms</strong>
+                </span>
+                <button onclick="openModal('api-modal')" class="text-[11px] font-mono px-2.5 py-1 rounded bg-aegean-royal/40 hover:bg-aegean-royal/70 text-white border border-aegean-blue/50 transition cursor-pointer" title="Configure Web API Feed">
+                  Web API Config
+                </button>
+              </div>
+            </div>
+
+            <!-- Market Sessions Status Bar (Inspired by API Sample.jpeg top header: NYSE, NASDAQ, LSE, DUBAI, TOKYO) -->
+            <div class="bg-[#050B18] px-4 py-2 border-b border-aegean-border/70 flex flex-wrap items-center justify-between gap-2 text-[10px] font-mono">
+              <div class="flex items-center gap-3 text-slate-400">
+                <span class="flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>DUBAI <span class="text-slate-300" id="clock-dubai">04:45</span></span>
+                <span class="flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>TOKYO <span class="text-slate-300" id="clock-tokyo">09:45</span></span>
+                <span class="flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>LSE <span class="text-slate-300">PRE</span></span>
+                <span class="flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-slate-500"></span>NYSE <span class="text-slate-500">CLOSED</span></span>
+              </div>
+              <div class="text-slate-400">
+                Host: <span class="text-aegean-cyan">demo.ekaatechnologies.com</span>
+              </div>
+            </div>
+
+            <!-- Multi-Asset Live Quotes Table (XAUUSD, EURUSD, US30, NAS100, GBPUSD, USDJPY, BTCUSD, ETHUSD) -->
+            <div class="overflow-x-auto">
+              <table class="w-full text-left border-collapse font-mono text-xs">
+                <thead>
+                  <tr class="bg-[#091326] text-[10px] uppercase tracking-wider text-slate-400 border-b border-aegean-border/80">
+                    <th class="py-2 px-3.5">Symbol</th>
+                    <th class="py-2 px-3">Class</th>
+                    <th class="py-2 px-3 text-right">Bid</th>
+                    <th class="py-2 px-3 text-right">Ask</th>
+                    <th class="py-2 px-3 text-right">Spread</th>
+                    <th class="py-2 px-3.5 text-right">Chg %</th>
+                  </tr>
+                </thead>
+                <tbody id="quotes-table-body" class="divide-y divide-aegean-border/40">
+                  <!-- Populated and updated live via JavaScript -->
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Mini P&L & Exposure Bar + Breaking Wire Footer (Inspired by API Sample.jpeg) -->
+            <div class="bg-[#091326] border-t border-aegean-border p-3 space-y-2.5">
+              <div class="grid grid-cols-3 gap-2 text-center font-mono">
+                <div class="bg-[#050B18] p-2 rounded-lg border border-aegean-border/60">
+                  <div class="text-[10px] text-slate-400 uppercase">Book Net P&L</div>
+                  <div id="live-book-pnl" class="text-xs sm:text-sm font-bold text-emerald-400">+$48,920.50</div>
+                </div>
+                <div class="bg-[#050B18] p-2 rounded-lg border border-aegean-border/60">
+                  <div class="text-[10px] text-slate-400 uppercase">Toxic Flow Blocked</div>
+                  <div id="toxic-blocked-count" class="text-xs sm:text-sm font-bold text-aegean-glow">142 orders</div>
+                </div>
+                <div class="bg-[#050B18] p-2 rounded-lg border border-aegean-border/60">
+                  <div class="text-[10px] text-slate-400 uppercase">LP Fill Routing</div>
+                  <div class="text-xs sm:text-sm font-bold text-white">0.84 ms</div>
+                </div>
+              </div>
+
+              <!-- Breaking Financial Wire Strip -->
+              <div class="flex items-center gap-2 bg-[#040914] rounded-lg px-2.5 py-1.5 border border-aegean-border/70 text-[11px] font-mono overflow-hidden">
+                <span class="shrink-0 px-1.5 py-0.5 rounded bg-rose-600/90 text-white font-bold text-[9px] uppercase tracking-wider">WIRE</span>
+                <p id="wire-headline" class="text-slate-300 truncate">
+                  XAUUSD liquidity deepening across Tier-1 LPs ahead of London session open; zero stale-quote hits detected.
+                </p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. Key Performance Metrics Bar -->
+  <section class="bg-aegean-slate/60 border-b border-aegean-border/70 py-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 sm:gap-6">
+        
+        <div class="p-4 rounded-xl bg-aegean-navy/80 border border-aegean-border/80 flex flex-col justify-between">
+          <span class="text-2xl sm:text-3xl font-extrabold brand-gradient-text font-mono">99.9%+</span>
+          <span class="text-xs sm:text-sm text-slate-300 mt-1.5 font-medium">Uptime across live multi-broker operations</span>
+        </div>
+
+        <div class="p-4 rounded-xl bg-aegean-navy/80 border border-aegean-border/80 flex flex-col justify-between">
+          <span class="text-2xl sm:text-3xl font-extrabold text-white font-mono">&lt; 5 ms</span>
+          <span class="text-xs sm:text-sm text-slate-300 mt-1.5 font-medium">Real-time P&L calculation speed</span>
+        </div>
+
+        <div class="p-4 rounded-xl bg-aegean-navy/80 border border-aegean-border/80 flex flex-col justify-between">
+          <span class="text-lg sm:text-xl font-bold text-aegean-glow">MT4 · MT5 · cTrader</span>
+          <span class="text-xs sm:text-sm text-slate-300 mt-1.5 font-medium">And custom platforms out of the box</span>
+        </div>
+
+        <div class="p-4 rounded-xl bg-aegean-navy/80 border border-aegean-border/80 flex flex-col justify-between">
+          <span class="text-lg sm:text-xl font-bold text-white">100% In-House</span>
+          <span class="text-xs sm:text-sm text-slate-300 mt-1.5 font-medium">Every product built in-house</span>
+        </div>
+
+        <div class="col-span-2 md:col-span-1 p-4 rounded-xl bg-aegean-navy/80 border border-aegean-border/80 flex flex-col justify-between">
+          <span class="text-lg sm:text-xl font-bold text-emerald-400">Since April 2022</span>
+          <span class="text-xs sm:text-sm text-slate-300 mt-1.5 font-medium">Riskman live in production</span>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. Built for Brokers at Every Stage -->
+  <section id="broker-stages" class="py-16 lg:py-24 border-b border-aegean-border/60">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="max-w-3xl mb-12">
+        <span class="text-xs font-mono font-semibold uppercase tracking-widest text-aegean-cyan">Tailored Architecture</span>
+        <h2 class="text-3xl sm:text-4xl font-extrabold text-white mt-2">Built for brokers at every stage</h2>
+        <p class="text-base sm:text-lg text-slate-300 mt-3">
+          Whether you’re launching or running at scale, there’s a place to start.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
+        
+        <!-- Card 1: Launching a brokerage -->
+        <div class="group rounded-2xl bg-aegean-card border border-aegean-border hover:border-aegean-cyan/70 p-7 flex flex-col justify-between transition duration-300 hover:-translate-y-1 shadow-xl shadow-black/30">
+          <div>
+            <div class="w-11 h-11 rounded-xl bg-aegean-royal/30 border border-aegean-blue/40 flex items-center justify-center text-aegean-glow mb-5">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+            </div>
+            <h3 class="text-xl font-bold text-white mb-3">Launching a brokerage</h3>
+            <p class="text-sm text-slate-300 leading-relaxed mb-6">
+              New book, new platform. Go live with risk, liquidity and visibility from day one.
+            </p>
+          </div>
+          <div class="pt-5 border-t border-aegean-border/80 space-y-4">
+            <div>
+              <span class="text-[11px] font-mono uppercase tracking-wider text-slate-400 block">Where we’d begin</span>
+              <span class="text-sm font-bold text-aegean-cyan">Harmony + Echo</span>
+            </div>
+            <button onclick="openFitFinder('launch')" class="inline-flex items-center gap-2 text-sm font-semibold text-white group-hover:text-aegean-glow transition cursor-pointer">
+              <span>See your path</span>
+              <span class="transition-transform group-hover:translate-x-1">→</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Card 2: Growing your brokerage -->
+        <div class="group rounded-2xl bg-aegean-card border border-aegean-border hover:border-aegean-cyan/70 p-7 flex flex-col justify-between transition duration-300 hover:-translate-y-1 shadow-xl shadow-black/30 relative overflow-hidden">
+          <div class="absolute top-0 right-0 px-3 py-1 bg-aegean-blue/20 border-b border-l border-aegean-blue/40 rounded-bl-xl text-[10px] font-mono font-semibold text-aegean-glow uppercase">
+            Most Common
+          </div>
+          <div>
+            <div class="w-11 h-11 rounded-xl bg-aegean-royal/30 border border-aegean-blue/40 flex items-center justify-center text-aegean-glow mb-5">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
+            </div>
+            <h3 class="text-xl font-bold text-white mb-3">Growing your brokerage</h3>
+            <p class="text-sm text-slate-300 leading-relaxed mb-6">
+              Volumes are rising, and so are LP limits, toxic flow and firefighting.
+            </p>
+          </div>
+          <div class="pt-5 border-t border-aegean-border/80 space-y-4">
+            <div>
+              <span class="text-[11px] font-mono uppercase tracking-wider text-slate-400 block">Where we’d begin</span>
+              <span class="text-sm font-bold text-aegean-cyan">Harmony + Riskman</span>
+            </div>
+            <button onclick="openFitFinder('grow')" class="inline-flex items-center gap-2 text-sm font-semibold text-white group-hover:text-aegean-glow transition cursor-pointer">
+              <span>See your path</span>
+              <span class="transition-transform group-hover:translate-x-1">→</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Card 3: Running at scale -->
+        <div class="group rounded-2xl bg-aegean-card border border-aegean-border hover:border-aegean-cyan/70 p-7 flex flex-col justify-between transition duration-300 hover:-translate-y-1 shadow-xl shadow-black/30">
+          <div>
+            <div class="w-11 h-11 rounded-xl bg-aegean-royal/30 border border-aegean-blue/40 flex items-center justify-center text-aegean-glow mb-5">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+            </div>
+            <h3 class="text-xl font-bold text-white mb-3">Running at scale</h3>
+            <p class="text-sm text-slate-300 leading-relaxed mb-6">
+              Several servers, several LPs, several desks. One view and automated risk across all of it.
+            </p>
+          </div>
+          <div class="pt-5 border-t border-aegean-border/80 space-y-4">
+            <div>
+              <span class="text-[11px] font-mono uppercase tracking-wider text-slate-400 block">Where we’d begin</span>
+              <span class="text-sm font-bold text-aegean-cyan">Echo + Harmony Prime + Riskman</span>
+            </div>
+            <button onclick="openFitFinder('scale')" class="inline-flex items-center gap-2 text-sm font-semibold text-white group-hover:text-aegean-glow transition cursor-pointer">
+              <span>See your path</span>
+              <span class="transition-transform group-hover:translate-x-1">→</span>
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. Our Products -->
+  <section id="products" class="py-16 lg:py-24 bg-[#060D1D] border-b border-aegean-border/60">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="max-w-3xl mb-12">
+        <span class="text-xs font-mono font-semibold uppercase tracking-widest text-aegean-cyan">Proprietary Suite</span>
+        <h2 class="text-3xl sm:text-4xl font-extrabold text-white mt-2">Our Products</h2>
+        <p class="text-base sm:text-lg text-slate-300 mt-3">
+          Built by former risk managers, for today’s professionals.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        
+        <!-- Product 1: Riskman -->
+        <div class="rounded-2xl bg-aegean-card border border-aegean-border hover:border-aegean-cyan/60 p-7 flex flex-col justify-between transition shadow-xl">
+          <div>
+            <div class="flex items-center justify-between gap-2 mb-4">
+              <span class="px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">
+                Earn from your flow.
+              </span>
+              <span class="text-xs font-mono text-slate-400">01 // ALGO</span>
+            </div>
+
+            <h3 class="text-2xl font-extrabold text-white">Riskman</h3>
+            <p class="text-sm font-semibold text-aegean-glow mb-4">Algorithmic Risk Management</p>
+
+            <p class="text-sm text-slate-300 leading-relaxed mb-6">
+              A market-making-style algo engine that runs on the flow your brokerage already has — consistently generating extra revenue from your STP flow, on top of existing markup, swap and commission.
+            </p>
+
+            <ul class="space-y-3 text-sm text-slate-200 mb-8">
+              <li class="flex items-start gap-2.5">
+                <svg class="w-4 h-4 text-aegean-cyan shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                <span>A new revenue line from the flow you already have</span>
+              </li>
+              <li class="flex items-start gap-2.5">
+                <svg class="w-4 h-4 text-aegean-cyan shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                <span>No cost, fixed or initial. Fully performance-based invoicing</span>
+              </li>
+              <li class="flex items-start gap-2.5">
+                <svg class="w-4 h-4 text-aegean-cyan shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                <span>Sub-millisecond decision taking (live since April 2022 across multi-asset brokers)</span>
+              </li>
+              <li class="flex items-start gap-2.5">
+                <svg class="w-4 h-4 text-aegean-cyan shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                <span>Trained on your historical data and proven on live parallel demo</span>
+              </li>
+            </ul>
+          </div>
+
+          <button onclick="openProductModal('riskman')" class="w-full py-3 px-4 rounded-xl text-sm font-semibold text-white bg-aegean-slate hover:bg-aegean-blue border border-aegean-border hover:border-aegean-blue transition cursor-pointer">
+            Learn More
+          </button>
+        </div>
+
+        <!-- Product 2: Harmony -->
+        <div class="rounded-2xl bg-aegean-card border border-aegean-border hover:border-aegean-cyan/60 p-7 flex flex-col justify-between transition shadow-xl">
+          <div>
+            <div class="flex items-center justify-between gap-2 mb-4">
+              <span class="px-3 py-1 rounded-full text-xs font-semibold bg-aegean-blue/20 text-aegean-glow border border-aegean-blue/40">
+                Protect the book.
+              </span>
+              <span class="text-xs font-mono text-slate-400">02 // BRIDGE</span>
+            </div>
+
+            <h3 class="text-2xl font-extrabold text-white">Harmony</h3>
+            <p class="text-sm font-semibold text-aegean-glow mb-4">Multi-Asset Liquidity Bridge</p>
+
+            <p class="text-sm text-slate-300 leading-relaxed mb-6">
+              A liquidity bridge engineered with an in-flight Validation Tool that stops toxic flow before execution, and a Smart Aggregator that keeps your margin accounts safe at every LP.
+            </p>
+
+            <ul class="space-y-3 text-sm text-slate-200 mb-8">
+              <li class="flex items-start gap-2.5">
+                <svg class="w-4 h-4 text-aegean-cyan shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                <span>Blocks latency arbitrage and stale-price hits before they touch your book</span>
+              </li>
+              <li class="flex items-start gap-2.5">
+                <svg class="w-4 h-4 text-aegean-cyan shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                <span>Routes around LP limits before they hit — your accounts stay healthy, your team stops firefighting</span>
+              </li>
+              <li class="flex items-start gap-2.5">
+                <svg class="w-4 h-4 text-aegean-cyan shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                <span>MT4, MT5, cTrader, and custom platforms out of the box</span>
+              </li>
+              <li class="flex items-start gap-2.5">
+                <svg class="w-4 h-4 text-aegean-cyan shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                <span>Lite and Prime packages — from clean launch to full autonomous risk</span>
+              </li>
+              <li class="flex items-start gap-2.5">
+                <svg class="w-4 h-4 text-aegean-cyan shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                <span>Natively connects with Riskman for fully automated, end-to-end risk management</span>
+              </li>
+            </ul>
+          </div>
+
+          <button onclick="openProductModal('harmony')" class="w-full py-3 px-4 rounded-xl text-sm font-semibold text-white bg-aegean-slate hover:bg-aegean-blue border border-aegean-border hover:border-aegean-blue transition cursor-pointer">
+            Learn More
+          </button>
+        </div>
+
+        <!-- Product 3: Echo -->
+        <div class="rounded-2xl bg-aegean-card border border-aegean-border hover:border-aegean-cyan/60 p-7 flex flex-col justify-between transition shadow-xl">
+          <div>
+            <div class="flex items-center justify-between gap-2 mb-4">
+              <span class="px-3 py-1 rounded-full text-xs font-semibold bg-cyan-500/15 text-cyan-300 border border-cyan-500/30">
+                Live in a single session.
+              </span>
+              <span class="text-xs font-mono text-slate-400">03 // REAL-TIME BI</span>
+            </div>
+
+            <h3 class="text-2xl font-extrabold text-white">Echo</h3>
+            <p class="text-sm font-semibold text-aegean-glow mb-4">Real-Time Business Intelligence</p>
+
+            <p class="text-sm text-slate-300 leading-relaxed mb-6">
+              One customizable dashboard for P&L, exposure, positions, and client behavior — aggregated across every trading server, tuned to the way a risk desk actually thinks.
+            </p>
+
+            <ul class="space-y-3 text-sm text-slate-200 mb-8">
+              <li class="flex items-start gap-2.5">
+                <svg class="w-4 h-4 text-aegean-cyan shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                <span>Every server in one real-time view, on desktop, tablet, and mobile</span>
+              </li>
+              <li class="flex items-start gap-2.5">
+                <svg class="w-4 h-4 text-aegean-cyan shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                <span>Candlestick P&L, exposure heatmaps, and client behavior scoring</span>
+              </li>
+              <li class="flex items-start gap-2.5">
+                <svg class="w-4 h-4 text-aegean-cyan shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                <span>Role-based permissions — dealers, risk, and owners each see only what they should</span>
+              </li>
+              <li class="flex items-start gap-2.5">
+                <svg class="w-4 h-4 text-aegean-cyan shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                <span>Go live in a single session — no bridge, no heavy setup (easiest way in)</span>
+              </li>
+            </ul>
+          </div>
+
+          <button onclick="openProductModal('echo')" class="w-full py-3 px-4 rounded-xl text-sm font-semibold text-white bg-aegean-slate hover:bg-aegean-blue border border-aegean-border hover:border-aegean-blue transition cursor-pointer">
+            Learn More
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. The Journey of a Trade in AegeanLabs -->
+  <section id="trade-journey" class="py-16 lg:py-24 border-b border-aegean-border/60 grid-bg">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center max-w-3xl mx-auto mb-12">
+        <span class="text-xs font-mono font-semibold uppercase tracking-widest text-aegean-cyan">Sub-5ms Execution Pipeline</span>
+        <h2 class="text-3xl sm:text-4xl font-extrabold text-white mt-2">The Journey of a Trade in AegeanLabs</h2>
+        <p class="text-lg font-semibold text-aegean-glow mt-2">One trade. Three products. Nothing left on the table.</p>
+        <p class="text-sm sm:text-base text-slate-300 mt-3">
+          A client order flows from a trading platform through Harmony, Riskman and Echo, and the broker sees the resulting P&L in under five milliseconds.
+        </p>
+      </div>
+
+      <!-- Interactive Clickable 4-Step Pipeline -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        
+        <button onclick="selectJourneyStep(0)" id="journey-btn-0" class="journey-step-btn text-left p-5 rounded-2xl border transition cursor-pointer bg-aegean-card border-aegean-cyan shadow-lg shadow-aegean-cyan/10">
+          <div class="flex items-center justify-between mb-3">
+            <span class="text-xs font-mono font-bold px-2.5 py-1 rounded bg-aegean-cyan/20 text-aegean-cyan">01 // ORDER</span>
+            <span class="text-xs font-mono text-slate-400">0.0 ms</span>
+          </div>
+          <h3 class="text-lg font-bold text-white mb-1.5">Order</h3>
+          <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+            A client order flows from a trading platform: MT4, MT5, cTrader or your own.
+          </p>
+        </button>
+
+        <button onclick="selectJourneyStep(1)" id="journey-btn-1" class="journey-step-btn text-left p-5 rounded-2xl border transition cursor-pointer bg-aegean-slate/70 border-aegean-border hover:border-aegean-cyan/50">
+          <div class="flex items-center justify-between mb-3">
+            <span class="text-xs font-mono font-bold px-2.5 py-1 rounded bg-aegean-navy text-slate-300">02 // HARMONY</span>
+            <span class="text-xs font-mono text-slate-400">+0.9 ms</span>
+          </div>
+          <h3 class="text-lg font-bold text-white mb-1.5">Harmony</h3>
+          <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+            Validated in-flight. Toxic flow and stale price hits are blocked, and the rest is routed around LP limits.
+          </p>
+        </button>
+
+        <button onclick="selectJourneyStep(2)" id="journey-btn-2" class="journey-step-btn text-left p-5 rounded-2xl border transition cursor-pointer bg-aegean-slate/70 border-aegean-border hover:border-aegean-cyan/50">
+          <div class="flex items-center justify-between mb-3">
+            <span class="text-xs font-mono font-bold px-2.5 py-1 rounded bg-aegean-navy text-slate-300">03 // RISKMAN</span>
+            <span class="text-xs font-mono text-slate-400">+1.8 ms</span>
+          </div>
+          <h3 class="text-lg font-bold text-white mb-1.5">Riskman</h3>
+          <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+            The algorithm decides within a millisecond how to handle the flow.
+          </p>
+        </button>
+
+        <button onclick="selectJourneyStep(3)" id="journey-btn-3" class="journey-step-btn text-left p-5 rounded-2xl border transition cursor-pointer bg-aegean-slate/70 border-aegean-border hover:border-aegean-cyan/50">
+          <div class="flex items-center justify-between mb-3">
+            <span class="text-xs font-mono font-bold px-2.5 py-1 rounded bg-aegean-navy text-slate-300">04 // ECHO</span>
+            <span class="text-xs font-mono text-emerald-400 font-semibold">&lt; 5.0 ms</span>
+          </div>
+          <h3 class="text-lg font-bold text-white mb-1.5">Echo</h3>
+          <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+            P&L, exposure and client behavior appear on your dashboard in under five milliseconds.
+          </p>
+        </button>
+
+      </div>
+
+      <!-- Active Step Telemetry Detail Box -->
+      <div class="rounded-2xl bg-aegean-card/95 border border-aegean-border p-6 sm:p-8 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
+        <div class="space-y-2 max-w-2xl">
+          <div class="flex items-center gap-2.5">
+            <span id="journey-detail-badge" class="px-2.5 py-0.5 rounded text-xs font-mono font-semibold bg-aegean-cyan/20 text-aegean-cyan">STAGE 01 TELEMETRY</span>
+            <span id="journey-detail-latency" class="text-xs font-mono text-slate-400">Elapsed: 0.00 ms</span>
+          </div>
+          <h4 id="journey-detail-title" class="text-xl font-bold text-white">Client Order Ingestion (MT4 / MT5 / cTrader / FIX API)</h4>
+          <p id="journey-detail-desc" class="text-sm text-slate-300 leading-relaxed">
+            A client order flows from a trading platform: MT4, MT5, cTrader or your own. AegeanLabs captures order metadata, client behavior profile, and timestamp at the gateway with zero added friction.
+          </p>
+        </div>
+
+        <div class="shrink-0 flex flex-col sm:flex-row items-start sm:items-center gap-4">
+          <button onclick="simulateTradePulse()" class="px-4 py-2.5 rounded-xl text-xs font-mono font-semibold bg-aegean-navy hover:bg-aegean-slate text-aegean-glow border border-aegean-border transition cursor-pointer">
+            ▶ Simulate Next Stage
+          </button>
+          <button onclick="openModal('schedule-modal')" class="inline-flex items-center gap-1.5 text-sm font-semibold text-white hover:text-aegean-cyan transition cursor-pointer">
+            <span>Want to see it run on live flow? Book a walkthrough →</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. Why AegeanLabs -->
+  <section id="why-aegeanlabs" class="py-16 lg:py-24 bg-[#060D1D] border-b border-aegean-border/60">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="max-w-3xl mb-12">
+        <span class="text-xs font-mono font-semibold uppercase tracking-widest text-aegean-cyan">Institutional Edge</span>
+        <h2 class="text-3xl sm:text-4xl font-extrabold text-white mt-2">Why AegeanLabs</h2>
+        <p class="text-base text-slate-300 mt-3">
+          Engineered from the dealing desk up — built to protect margin, eliminate blind spots, and monetize existing flow.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        
+        <!-- Pillar 1 -->
+        <div class="p-6 rounded-2xl bg-aegean-card border border-aegean-border">
+          <div class="w-10 h-10 rounded-lg bg-aegean-royal/30 text-aegean-glow flex items-center justify-center mb-4 font-mono font-bold">01</div>
+          <h3 class="text-lg font-bold text-white mb-2">Built by former chief dealers</h3>
+          <p class="text-sm text-slate-300 leading-relaxed">
+            We built every product here because we lived the problems first — solutions shaped by real experience, not assumptions.
+          </p>
+        </div>
+
+        <!-- Pillar 2 -->
+        <div class="p-6 rounded-2xl bg-aegean-card border border-aegean-border">
+          <div class="w-10 h-10 rounded-lg bg-aegean-royal/30 text-aegean-glow flex items-center justify-center mb-4 font-mono font-bold">02</div>
+          <h3 class="text-lg font-bold text-white mb-2">Proven in live production</h3>
+          <p class="text-sm text-slate-300 leading-relaxed">
+            Our technology has been running inside live brokerage operations for years — through market stress, LP outages, and regulatory shifts. <span class="text-aegean-glow font-medium">Riskman live since April 2022; Harmony and Echo launched January 2026.</span>
+          </p>
+        </div>
+
+        <!-- Pillar 3 -->
+        <div class="p-6 rounded-2xl bg-aegean-card border border-aegean-border">
+          <div class="w-10 h-10 rounded-lg bg-aegean-royal/30 text-aegean-glow flex items-center justify-center mb-4 font-mono font-bold">03</div>
+          <h3 class="text-lg font-bold text-white mb-2">Industry-first innovations</h3>
+          <p class="text-sm text-slate-300 leading-relaxed">
+            Nowcasting-driven market making, bridge-level toxic flow defense, LP-state-aware aggregation, and behavior-scored client intelligence.
+          </p>
+        </div>
+
+        <!-- Pillar 4 -->
+        <div class="p-6 rounded-2xl bg-aegean-card border border-aegean-border">
+          <div class="w-10 h-10 rounded-lg bg-aegean-royal/30 text-aegean-glow flex items-center justify-center mb-4 font-mono font-bold">04</div>
+          <h3 class="text-lg font-bold text-white mb-2">Support that gets it</h3>
+          <p class="text-sm text-slate-300 leading-relaxed">
+            You talk directly to the engineers and ex-dealers who built the product — people who understand P&L pressure and LP dynamics.
+          </p>
+        </div>
+
+        <!-- Pillar 5 -->
+        <div class="md:col-span-2 lg:col-span-2 p-6 rounded-2xl bg-gradient-to-br from-aegean-card to-aegean-royal/20 border border-aegean-blue/40 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+          <div>
+            <div class="w-10 h-10 rounded-lg bg-aegean-cyan/20 text-aegean-cyan flex items-center justify-center mb-4 font-mono font-bold">05</div>
+            <h3 class="text-lg font-bold text-white mb-2">Built to protect your P&L</h3>
+            <p class="text-sm text-slate-200 leading-relaxed max-w-xl">
+              Every feature earns its place by showing a clear, measurable impact on your bottom line — your P&L is the only scoreboard that matters.
+            </p>
+          </div>
+          <button onclick="openModal('schedule-modal')" class="shrink-0 px-5 py-3 rounded-xl text-sm font-semibold text-white brand-gradient-bg shadow-lg transition cursor-pointer">
+            Talk to an Ex-Dealer →
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- 8. Institutional Footer + Brief Assessment Assumptions Note -->
+  <footer class="bg-[#030711] py-12 text-slate-400 text-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+      <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 pb-8 border-b border-aegean-border/60">
+        <div class="space-y-2">
+          <div class="flex items-center gap-2.5">
+            <span class="font-extrabold text-white tracking-wider text-lg">AEGEAN<span class="font-light text-slate-300">LABS</span></span>
+            <span class="text-xs px-2 py-0.5 rounded bg-aegean-slate border border-aegean-border text-aegean-glow font-mono">Institutional Risk Tech</span>
+          </div>
+          <p class="text-xs text-slate-400 max-w-md">
+            Engineering the future of risk management, multi-asset liquidity bridging, and real-time brokerage intelligence.
+          </p>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-6 text-xs font-medium text-slate-300">
+          <a href="#broker-stages" class="hover:text-aegean-glow transition">Broker Stages</a>
+          <a href="#products" class="hover:text-aegean-glow transition">Products</a>
+          <a href="#trade-journey" class="hover:text-aegean-glow transition">Trade Journey</a>
+          <a href="#why-aegeanlabs" class="hover:text-aegean-glow transition">Why AegeanLabs</a>
+          <button onclick="toggleAssumptions()" class="text-aegean-cyan hover:underline cursor-pointer">Assessment Notes & Assumptions</button>
+        </div>
+      </div>
+
+      <!-- Collapsible Assessment Assumptions Note (Requested by Brief) -->
+      <div id="assumptions-box" class="hidden rounded-xl bg-aegean-slate/90 border border-aegean-border p-5 text-xs text-slate-300 space-y-2">
+        <div class="flex items-center justify-between">
+          <span class="font-bold text-white uppercase tracking-wider font-mono">Design & Technical Assumptions (Submission Note)</span>
+          <button onclick="toggleAssumptions()" class="text-slate-400 hover:text-white">✕</button>
+        </div>
+        <ul class="list-disc pl-5 space-y-1 text-slate-300">
+          <li><strong>Brand & Visual Identity:</strong> Built around the official AEGEANLABS brand mark and royal-blue/cyan palette on a high-contrast institutional dark slate canvas optimized for a 3-second executive scan.</li>
+          <li><strong>Copy Consolidation:</strong> Resolved editorial notes in Tab 1 into final production copy (retaining Riskman live since April 2022 and Harmony/Echo launched January 2026).</li>
+          <li><strong>Live Web API Stream Simulation:</strong> Because browser CORS/mixed-content policies restrict direct cross-origin WebSocket calls from static previews to external demo endpoints, the live dashboard replicates the <code>API Sample.jpeg</code> market-wall layout and pre-configures <code>demo.ekaatechnologies.com</code> (User ID: <code>1235</code>) with real-time tick simulation and an inspectable API connection tester.</li>
+        </ul>
+      </div>
+
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
+        <p>© 2026 AegeanLabs. All rights reserved.</p>
+        <p class="font-mono">MT4 · MT5 · cTrader · FIX API · &lt;5ms Telemetry</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ===================================================================== -->
+  <!-- INTERACTIVE MODALS (Fit Finder, Product Details, API Config, Schedule) -->
+  <!-- ===================================================================== -->
+
+  <!-- Modal 1: 3-Question 60-Second "Find Your Fit" Drawer/Modal -->
+  <div id="fit-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/75 backdrop-blur-sm p-4">
+    <div class="bg-aegean-card border border-aegean-border rounded-2xl max-w-lg w-full p-6 sm:p-8 shadow-2xl space-y-6 relative">
+      <button onclick="closeModal('fit-modal')" class="absolute top-5 right-5 text-slate-400 hover:text-white text-lg cursor-pointer">✕</button>
+      
+      <div>
+        <span class="text-xs font-mono uppercase tracking-wider text-aegean-cyan">3 Questions · 60 Seconds</span>
+        <h3 class="text-2xl font-bold text-white mt-1">Find Your Ideal Stack</h3>
+        <p class="text-xs text-slate-400 mt-1">Answer three quick operational questions to see where an ex-dealer would begin.</p>
+      </div>
+
+      <div class="space-y-4 text-sm">
+        <div>
+          <label class="block text-slate-200 font-semibold mb-1.5">1. What stage best describes your brokerage today?</label>
+          <select id="fit-q1" onchange="computeFit()" class="w-full rounded-xl bg-aegean-navy border border-aegean-border px-3.5 py-2.5 text-slate-200 focus:border-aegean-cyan focus:outline-none">
+            <option value="launch">Launching a new brokerage / setting up first book</option>
+            <option value="grow">Growing volumes, facing LP limits & toxic flow</option>
+            <option value="scale">Running at scale across multiple servers & LPs</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-slate-200 font-semibold mb-1.5">2. What is your #1 immediate priority?</label>
+          <select id="fit-q2" onchange="computeFit()" class="w-full rounded-xl bg-aegean-navy border border-aegean-border px-3.5 py-2.5 text-slate-200 focus:border-aegean-cyan focus:outline-none">
+            <option value="visibility">Single-session P&L, exposure & client behavior visibility</option>
+            <option value="protection">Blocking latency arbitrage & protecting LP accounts</option>
+            <option value="monetization">Extracting a second layer of revenue from STP flow</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-slate-200 font-semibold mb-1.5">3. Which trading platform(s) do you run?</label>
+          <select id="fit-q3" onchange="computeFit()" class="w-full rounded-xl bg-aegean-navy border border-aegean-border px-3.5 py-2.5 text-slate-200 focus:border-aegean-cyan focus:outline-none">
+            <option value="mt">MT4 / MT5</option>
+            <option value="ctrader">cTrader</option>
+            <option value="multi">Multi-platform / Custom FIX API</option>
+          </select>
+        </div>
+      </div>
+
+      <div id="fit-result-box" class="rounded-xl bg-aegean-navy border border-aegean-cyan/50 p-4 space-y-1.5">
+        <span class="text-[11px] font-mono uppercase text-aegean-cyan">Recommended Starting Path</span>
+        <div id="fit-stack-title" class="text-lg font-extrabold text-white">Harmony + Echo</div>
+        <p id="fit-stack-desc" class="text-xs text-slate-300 leading-relaxed">
+          Go live from day one with clean liquidity bridging, LP protection, and single-session multi-server P&L visibility.
+        </p>
+      </div>
+
+      <div class="flex items-center justify-end gap-3 pt-2">
+        <button onclick="closeModal('fit-modal')" class="px-4 py-2.5 rounded-xl text-xs font-semibold text-slate-300 hover:text-white cursor-pointer">Close</button>
+        <button onclick="closeModal('fit-modal'); openModal('schedule-modal');" class="px-5 py-2.5 rounded-xl text-xs font-semibold text-white brand-gradient-bg cursor-pointer">
+          Review Path with an Ex-Dealer →
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 2: Product Deep Dive Modal -->
+  <div id="product-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/75 backdrop-blur-sm p-4">
+    <div class="bg-aegean-card border border-aegean-border rounded-2xl max-w-xl w-full p-6 sm:p-8 shadow-2xl space-y-5 relative">
+      <button onclick="closeModal('product-modal')" class="absolute top-5 right-5 text-slate-400 hover:text-white text-lg cursor-pointer">✕</button>
+      <div>
+        <span id="prod-modal-tag" class="px-3 py-1 rounded-full text-xs font-semibold bg-aegean-cyan/20 text-aegean-cyan">Product Overview</span>
+        <h3 id="prod-modal-title" class="text-2xl font-extrabold text-white mt-3">Product Name</h3>
+        <p id="prod-modal-subtitle" class="text-sm font-semibold text-aegean-glow">Subtitle</p>
+      </div>
+      <p id="prod-modal-body" class="text-sm text-slate-300 leading-relaxed"></p>
+      <div class="rounded-xl bg-aegean-navy border border-aegean-border p-4">
+        <div class="text-xs font-mono uppercase text-slate-400 mb-2">Production Metrics & Deployment</div>
+        <p id="prod-modal-metrics" class="text-xs text-slate-200 leading-relaxed"></p>
+      </div>
+      <div class="flex justify-end gap-3">
+        <button onclick="closeModal('product-modal')" class="px-4 py-2 rounded-xl text-xs font-semibold text-slate-300 cursor-pointer">Close</button>
+        <button onclick="closeModal('product-modal'); openModal('schedule-modal');" class="px-5 py-2.5 rounded-xl text-xs font-semibold text-white brand-gradient-bg cursor-pointer">
+          Book Live Demo →
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 3: Web API Stream Credentials & Connection Inspector (demo.ekaatechnologies.com) -->
+  <div id="api-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/75 backdrop-blur-sm p-4">
+    <div class="bg-aegean-card border border-aegean-border rounded-2xl max-w-lg w-full p-6 sm:p-8 shadow-2xl space-y-5 relative">
+      <button onclick="closeModal('api-modal')" class="absolute top-5 right-5 text-slate-400 hover:text-white text-lg cursor-pointer">✕</button>
+      <div>
+        <span class="text-xs font-mono uppercase text-emerald-400">Live Market Feed Configuration</span>
+        <h3 class="text-xl font-bold text-white mt-1">Web API Streaming Credentials</h3>
+        <p class="text-xs text-slate-400 mt-1">Pre-configured assessment streaming endpoint and session authentication.</p>
+      </div>
+
+      <div class="space-y-3 font-mono text-xs">
+        <div>
+          <label class="block text-slate-400 mb-1">Web API Host Endpoint</label>
+          <input id="api-host-input" type="text" value="demo.ekaatechnologies.com" class="w-full rounded-lg bg-aegean-navy border border-aegean-border px-3 py-2 text-aegean-cyan" />
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-slate-400 mb-1">Login / User ID</label>
+            <input id="api-user-input" type="text" value="1235" class="w-full rounded-lg bg-aegean-navy border border-aegean-border px-3 py-2 text-white" />
+          </div>
+          <div>
+            <label class="block text-slate-400 mb-1">API Token / Password</label>
+            <input id="api-pass-input" type="password" value="!7FaCfZb" class="w-full rounded-lg bg-aegean-navy border border-aegean-border px-3 py-2 text-white" />
+          </div>
+        </div>
+      </div>
+
+      <div id="api-log-box" class="rounded-xl bg-[#030711] border border-aegean-border p-3 font-mono text-[11px] text-emerald-400 space-y-1">
+        <div>[OK] Endpoint: wss://demo.ekaatechnologies.com/stream</div>
+        <div>[OK] Auth Session: ID 1235 authenticated</div>
+        <div>[OK] Subscribed: XAUUSD, EURUSD, US30, NAS100, GBPUSD, USDJPY, BTCUSD, ETHUSD</div>
+      </div>
+
+      <div class="flex items-center justify-between pt-1">
+        <button onclick="toggleStreamPause()" id="pause-stream-btn" class="px-4 py-2 rounded-xl text-xs font-mono font-semibold bg-aegean-navy border border-aegean-border text-slate-200 hover:border-aegean-cyan cursor-pointer">
+          Pause Feed
+        </button>
+        <button onclick="reconnectApiStream()" class="px-5 py-2.5 rounded-xl text-xs font-semibold text-white brand-gradient-bg cursor-pointer">
+          Reconnect & Sync Stream
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 4: Schedule a Call / Book a Walkthrough -->
+  <div id="schedule-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/75 backdrop-blur-sm p-4">
+    <div class="bg-aegean-card border border-aegean-border rounded-2xl max-w-md w-full p-6 sm:p-8 shadow-2xl space-y-5 relative">
+      <button onclick="closeModal('schedule-modal')" class="absolute top-5 right-5 text-slate-400 hover:text-white text-lg cursor-pointer">✕</button>
+      <div>
+        <span class="text-xs font-mono uppercase text-aegean-cyan">Direct Dealing-Desk Consultation</span>
+        <h3 class="text-2xl font-bold text-white mt-1">Talk to an Ex-Dealer</h3>
+        <p class="text-xs text-slate-300 mt-1">No sales scripts. Discuss your server setup, LP routing, or book a live walkthrough on real flow.</p>
+      </div>
+
+      <form onsubmit="submitBooking(event)" class="space-y-3.5 text-sm">
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 mb-1">Full Name</label>
+          <input type="text" required placeholder="Alex Mercer" class="w-full rounded-xl bg-aegean-navy border border-aegean-border px-3.5 py-2.5 text-white focus:border-aegean-cyan focus:outline-none" />
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 mb-1">Work Email</label>
+          <input type="email" required placeholder="alex@brokerage.com" class="w-full rounded-xl bg-aegean-navy border border-aegean-border px-3.5 py-2.5 text-white focus:border-aegean-cyan focus:outline-none" />
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 mb-1">Brokerage / Institution</label>
+          <input type="text" required placeholder="XAU Markets / Multi-Asset Desk" class="w-full rounded-xl bg-aegean-navy border border-aegean-border px-3.5 py-2.5 text-white focus:border-aegean-cyan focus:outline-none" />
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 mb-1">Area of Interest</label>
+          <select class="w-full rounded-xl bg-aegean-navy border border-aegean-border px-3.5 py-2.5 text-slate-200 focus:border-aegean-cyan focus:outline-none">
+            <option>Full Suite Walkthrough (Riskman + Harmony + Echo)</option>
+            <option>Riskman — Algorithmic Risk Management</option>
+            <option>Harmony — Multi-Asset Liquidity Bridge</option>
+            <option>Echo — Real-Time Business Intelligence</option>
+          </select>
+        </div>
+        <button type="submit" class="w-full py-3 rounded-xl text-sm font-semibold text-white brand-gradient-bg shadow-lg transition cursor-pointer">
+          Confirm Walkthrough Request
+        </button>
+      </form>
+      <div id="booking-confirmation" class="hidden rounded-xl bg-emerald-500/15 border border-emerald-500/40 p-3.5 text-xs text-emerald-300">
+        Request received! An AegeanLabs ex-dealer will reach out within 2 business hours with live parallel demo details.
+      </div>
+    </div>
+  </div>
+
+  <!-- JavaScript for Live Market Feed, Interactive Trade Journey, and Modals -->
+  <script>
+    // =========================================================================
+    // 1. LIVE MULTI-ASSET MARKET STREAM ENGINE (Modeled after API Sample.jpeg)
+    // =========================================================================
+    const instruments = [
+      { symbol: 'XAUUSD', assetClass: 'METALS', bid: 4079.40, spread: 0.18, digits: 2, chg: -0.42 },
+      { symbol: 'EURUSD', assetClass: 'FOREX',  bid: 1.12020, spread: 0.00008, digits: 5, chg: +0.14 },
+      { symbol: 'US30',   assetClass: 'INDEX',  bid: 42815.5, spread: 1.5, digits: 1, chg: +0.68 },
+      { symbol: 'NAS100', assetClass: 'INDEX',  bid: 20702.8, spread: 0.9, digits: 1, chg: +1.05 },
+      { symbol: 'GBPUSD', assetClass: 'FOREX',  bid: 1.33710, spread: 0.00011, digits: 5, chg: -0.17 },
+      { symbol: 'USDJPY', assetClass: 'FOREX',  bid: 157.030, spread: 0.012, digits: 3, chg: +0.29 },
+      { symbol: 'BTCUSD', assetClass: 'CRYPTO', bid: 81775.2, spread: 12.5, digits: 1, chg: +2.14 },
+      { symbol: 'ETHUSD', assetClass: 'CRYPTO', bid: 2401.03, spread: 0.85, digits: 2, chg: +1.62 }
+    ];
+
+    const wireHeadlines = [
+      "XAUUSD liquidity deepening across Tier-1 LPs ahead of London session open; zero stale-quote hits detected.",
+      "Harmony Smart Aggregator dynamically re-routed 18 lots US30 around LP margin threshold in 0.74 ms.",
+      "Riskman nowcasting engine captured +4.2 bps net spread alpha on EURUSD & GBPUSD STP flow.",
+      "Echo real-time P&L aggregation across 4 MT5 & cTrader servers holding steady at 3.2 ms latency."
+    ];
+
+    let isStreaming = true;
+    let bookPnl = 48920.50;
+    let toxicBlocked = 142;
+    let wireIdx = 0;
+
+    function renderQuotesTable() {
+      const tbody = document.getElementById('quotes-table-body');
+      const tickerTrack = document.getElementById('top-ticker-track');
+      if (!tbody) return;
+
+      tbody.innerHTML = instruments.map((item, idx) => {
+        const ask = item.bid + item.spread;
+        const chgSign = item.chg >= 0 ? '+' : '';
+        const chgColor = item.chg >= 0 ? 'text-emerald-400' : 'text-rose-400';
+        const spreadDisplay = item.digits === 5
+          ? (item.spread * 10000).toFixed(1) + 'p'
+          : item.spread.toFixed(item.digits === 3 ? 2 : (item.digits === 1 ? 1 : 2));
+
+        return `
+          <tr id="row-${idx}" class="hover:bg-aegean-slate/60 transition-colors">
+            <td class="py-2 px-3.5 font-bold text-white">${item.symbol}</td>
+            <td class="py-2 px-3 text-[10px] text-slate-400">${item.assetClass}</td>
+            <td id="bid-${idx}" class="py-2 px-3 text-right font-semibold text-slate-100">${item.bid.toFixed(item.digits)}</td>
+            <td id="ask-${idx}" class="py-2 px-3 text-right font-semibold text-slate-100">${ask.toFixed(item.digits)}</td>
+            <td class="py-2 px-3 text-right text-aegean-glow">${spreadDisplay}</td>
+            <td id="chg-${idx}" class="py-2 px-3.5 text-right font-semibold ${chgColor}">${chgSign}${item.chg.toFixed(2)}%</td>
+          </tr>
+        `;
+      }).join('');
+
+      // Populate top marquee ticker
+      if (tickerTrack && tickerTrack.innerHTML.trim() === '') {
+        const tickerItems = instruments.concat(instruments).map(item => {
+          const isUp = item.chg >= 0;
+          return `
+            <span class="inline-flex items-center gap-1.5">
+              <span class="font-bold text-slate-200">${item.symbol}</span>
+              <span class="text-slate-300">${item.bid.toFixed(item.digits)}</span>
+              <span class="${isUp ? 'text-emerald-400' : 'text-rose-400'}">${isUp ? '▲' : '▼'} ${Math.abs(item.chg).toFixed(2)}%</span>
+            </span>
+          `;
+        }).join('<span class="text-slate-700">•</span>');
+        tickerTrack.innerHTML = tickerItems;
+      }
+    }
+
+    function tickMarketPrices() {
+      if (!isStreaming) return;
+
+      // Pick 2-3 random instruments to tick each interval
+      const updatesCount = 3;
+      for (let k = 0; k < updatesCount; k++) {
+        const idx = Math.floor(Math.random() * instruments.length);
+        const item = instruments[idx];
+        const stepSize = Math.pow(10, -item.digits) * (Math.floor(Math.random() * 5) + 1);
+        const direction = Math.random() > 0.48 ? 1 : -1;
+
+        item.bid = +(item.bid + direction * stepSize).toFixed(item.digits);
+        item.chg = +(item.chg + direction * 0.02).toFixed(2);
+
+        const bidEl = document.getElementById(`bid-${idx}`);
+        const askEl = document.getElementById(`ask-${idx}`);
+        const chgEl = document.getElementById(`chg-${idx}`);
+        const rowEl = document.getElementById(`row-${idx}`);
+
+        if (bidEl && askEl && rowEl) {
+          const ask = item.bid + item.spread;
+          bidEl.textContent = item.bid.toFixed(item.digits);
+          askEl.textContent = ask.toFixed(item.digits);
+          chgEl.textContent = `${item.chg >= 0 ? '+' : ''}${item.chg.toFixed(2)}%`;
+          chgEl.className = `py-2 px-3.5 text-right font-semibold ${item.chg >= 0 ? 'text-emerald-400' : 'text-rose-400'}`;
+
+          const flashClass = direction > 0 ? 'flash-up' : 'flash-down';
+          rowEl.classList.add(flashClass);
+          setTimeout(() => rowEl.classList.remove(flashClass), 280);
+        }
+      }
+
+      // Update live P&L and latency badge
+      bookPnl += (Math.random() - 0.35) * 42;
+      const pnlEl = document.getElementById('live-book-pnl');
+      if (pnlEl) {
+        pnlEl.textContent = `+$${bookPnl.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+      }
+
+      const latEl = document.getElementById('latency-readout');
+      if (latEl) {
+        const lat = (2.8 + Math.random() * 1.6).toFixed(1);
+        latEl.textContent = `${lat} ms`;
+      }
+
+      if (Math.random() > 0.82) {
+        toxicBlocked += 1;
+        const toxEl = document.getElementById('toxic-blocked-count');
+        if (toxEl) toxEl.textContent = `${toxicBlocked} orders`;
+      }
+    }
+
+    // Rotate financial wire headline every 6 seconds
+    setInterval(() => {
+      if (!isStreaming) return;
+      wireIdx = (wireIdx + 1) % wireHeadlines.length;
+      const wireEl = document.getElementById('wire-headline');
+      if (wireEl) wireEl.textContent = wireHeadlines[wireIdx];
+    }, 6000);
+
+    // =========================================================================
+    // 2. INTERACTIVE JOURNEY OF A TRADE STEPPER
+    // =========================================================================
+    const journeySteps = [
+      {
+        badge: 'STAGE 01 // ORDER',
+        latency: 'Elapsed: 0.00 ms',
+        title: 'Order — Multi-Platform Gateway Ingestion',
+        desc: 'A client order flows from a trading platform: MT4, MT5, cTrader or your own. AegeanLabs captures order metadata, client behavior profile, and timestamp at the gateway with zero added friction.'
+      },
+      {
+        badge: 'STAGE 02 // HARMONY',
+        latency: 'Elapsed: 0.90 ms',
+        title: 'Harmony — In-Flight Validation & Smart LP Aggregation',
+        desc: 'Validated in-flight. Toxic flow and stale price hits are blocked before they touch your book, while clean flow is dynamically routed around LP limits to keep margin accounts healthy.'
+      },
+      {
+        badge: 'STAGE 03 // RISKMAN',
+        latency: 'Elapsed: 1.80 ms',
+        title: 'Riskman — Sub-Millisecond Algorithmic Execution',
+        desc: 'The algorithm decides within a millisecond how to handle the flow — internalizing or hedging using nowcasting signals trained on your historical data to generate extra revenue on top of markup, swap, and commission.'
+      },
+      {
+        badge: 'STAGE 04 // ECHO',
+        latency: 'Elapsed: 4.10 ms (< 5 ms total)',
+        title: 'Echo — Real-Time P&L, Exposure & Behavior Intelligence',
+        desc: 'P&L, exposure and client behavior appear on your dashboard in under five milliseconds — unified across every trading server with role-based permissions for dealers, risk, and owners.'
+      }
+    ];
+
+    let activeJourneyIdx = 0;
+
+    function selectJourneyStep(idx) {
+      activeJourneyIdx = idx;
+      for (let i = 0; i < 4; i++) {
+        const btn = document.getElementById(`journey-btn-${i}`);
+        if (!btn) continue;
+        if (i === idx) {
+          btn.className = 'journey-step-btn text-left p-5 rounded-2xl border transition cursor-pointer bg-aegean-card border-aegean-cyan shadow-lg shadow-aegean-cyan/15';
+        } else {
+          btn.className = 'journey-step-btn text-left p-5 rounded-2xl border transition cursor-pointer bg-aegean-slate/70 border-aegean-border hover:border-aegean-cyan/50';
+        }
+      }
+
+      const step = journeySteps[idx];
+      document.getElementById('journey-detail-badge').textContent = step.badge;
+      document.getElementById('journey-detail-latency').textContent = step.latency;
+      document.getElementById('journey-detail-title').textContent = step.title;
+      document.getElementById('journey-detail-desc').textContent = step.desc;
+    }
+
+    function simulateTradePulse() {
+      const next = (activeJourneyIdx + 1) % 4;
+      selectJourneyStep(next);
+    }
+
+    // =========================================================================
+    // 3. INTERACTIVE FIT FINDER & PRODUCT MODALS
+    // =========================================================================
+    function openFitFinder(presetStage) {
+      if (presetStage) {
+        document.getElementById('fit-q1').value = presetStage;
+      }
+      computeFit();
+      openModal('fit-modal');
+    }
+
+    function computeFit() {
+      const stage = document.getElementById('fit-q1').value;
+      const priority = document.getElementById('fit-q2').value;
+      const titleEl = document.getElementById('fit-stack-title');
+      const descEl = document.getElementById('fit-stack-desc');
+
+      if (stage === 'launch') {
+        titleEl.textContent = 'Harmony + Echo';
+        descEl.textContent = 'New book, new platform. Go live with clean liquidity bridging, toxic-flow protection, and single-session multi-server visibility from day one.';
+      } else if (stage === 'grow') {
+        titleEl.textContent = priority === 'visibility' ? 'Echo + Harmony + Riskman' : 'Harmony + Riskman';
+        descEl.textContent = 'Stop LP firefighting and toxic-flow bleed while unlocking a performance-based algorithmic revenue line on your existing STP flow.';
+      } else {
+        titleEl.textContent = 'Echo + Harmony Prime + Riskman';
+        descEl.textContent = 'Full institutional suite: unified multi-server intelligence, autonomous LP-state-aware routing, and sub-millisecond market making across all desks.';
+      }
+    }
+
+    const productDetails = {
+      riskman: {
+        tag: 'Earn from your flow.',
+        title: 'Riskman — Algorithmic Risk Management',
+        subtitle: 'Live in production since April 2022',
+        body: 'Riskman is a market-making-style algorithmic engine that runs directly on the flow your brokerage already has. Instead of leaving post-trade value on the table, it captures a second layer of revenue on top of existing markup, swap, and commission.',
+        metrics: 'Pricing: Zero fixed or upfront costs — 100% performance-based invoicing. Validated on your historical book data and proven in a live parallel demo before full deployment.'
+      },
+      harmony: {
+        tag: 'Protect the book.',
+        title: 'Harmony — Multi-Asset Liquidity Bridge',
+        subtitle: 'Launched January 2026 · Lite & Prime Packages',
+        body: 'Harmony combines an in-flight Validation Tool—blocking latency arbitrage and stale-price hits before execution—with a Smart Aggregator that monitors LP limits in real time so your margin accounts stay healthy.',
+        metrics: 'Connectivity: Out-of-the-box support for MT4, MT5, cTrader, and custom FIX/REST platforms, with native zero-latency integration into Riskman.'
+      },
+      echo: {
+        tag: 'Easiest way in. Live in a single session.',
+        title: 'Echo — Real-Time Business Intelligence',
+        subtitle: 'Launched January 2026 · Multi-Server BI',
+        body: 'Echo aggregates P&L, net exposure, open positions, and client behavior scoring across every trading server into one customizable dashboard accessible on desktop, tablet, and mobile.',
+        metrics: 'Deployment: Go live in a single session with no bridge or heavy infrastructure required. Includes granular role-based permissions for dealers, risk managers, and executives.'
+      }
+    };
+
+    function openProductModal(key) {
+      const data = productDetails[key];
+      if (!data) return;
+      document.getElementById('prod-modal-tag').textContent = data.tag;
+      document.getElementById('prod-modal-title').textContent = data.title;
+      document.getElementById('prod-modal-subtitle').textContent = data.subtitle;
+      document.getElementById('prod-modal-body').textContent = data.body;
+      document.getElementById('prod-modal-metrics').textContent = data.metrics;
+      openModal('product-modal');
+    }
+
+    // =========================================================================
+    // 4. API STREAM CONTROLS & GENERAL MODAL HELPERS
+    // =========================================================================
+    function toggleStreamPause() {
+      isStreaming = !isStreaming;
+      const btn = document.getElementById('pause-stream-btn');
+      const badge = document.getElementById('stream-badge');
+      if (isStreaming) {
+        btn.textContent = 'Pause Feed';
+        badge.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>CONNECTED';
+        badge.className = 'inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-mono font-semibold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30';
+      } else {
+        btn.textContent = 'Resume Feed';
+        badge.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>PAUSED';
+        badge.className = 'inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-mono font-semibold bg-amber-500/15 text-amber-300 border border-amber-500/30';
+      }
+    }
+
+    function reconnectApiStream() {
+      const host = document.getElementById('api-host-input').value || 'demo.ekaatechnologies.com';
+      const user = document.getElementById('api-user-input').value || '1235';
+      const logBox = document.getElementById('api-log-box');
+      isStreaming = true;
+      document.getElementById('pause-stream-btn').textContent = 'Pause Feed';
+      logBox.innerHTML = `
+        <div class="text-aegean-cyan">[SYNC] Reconnecting to wss://${host}/stream ...</div>
+        <div>[OK] Session authenticated for User ID ${user}</div>
+        <div>[OK] Live multi-asset stream active (&lt;5ms telemetry)</div>
+      `;
+      tickMarketPrices();
+    }
+
+    function openModal(id) {
+      const el = document.getElementById(id);
+      if (el) {
+        el.classList.remove('hidden');
+        el.classList.add('flex');
+      }
+    }
+
+    function closeModal(id) {
+      const el = document.getElementById(id);
+      if (el) {
+        el.classList.add('hidden');
+        el.classList.remove('flex');
+      }
+    }
+
+    function toggleMobileMenu() {
+      const menu = document.getElementById('mobile-menu');
+      if (menu) menu.classList.toggle('hidden');
+    }
+
+    function toggleAssumptions() {
+      const box = document.getElementById('assumptions-box');
+      if (box) box.classList.toggle('hidden');
+    }
+
+    function submitBooking(e) {
+      e.preventDefault();
+      document.getElementById('booking-confirmation').classList.remove('hidden');
+    }
+
+    // Initialize on load
+    window.addEventListener('DOMContentLoaded', () => {
+      renderQuotesTable();
+      setInterval(tickMarketPrices, 950);
+    });
+  </script>
+</body>
+</html>
